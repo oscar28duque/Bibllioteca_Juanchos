@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'api_bibli.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'api_db',
+        'NAME': 'biblioteca',
         'USER': 'postgres',
         'PASSWORD': '123456',
         'HOST': 'localhost',

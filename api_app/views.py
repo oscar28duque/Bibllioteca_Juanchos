@@ -76,8 +76,12 @@ class PrestamoList(generics.ListCreateAPIView):
         if fecha_prestamo:
             queryset = queryset.filter(fecha_prestamo=fecha_prestamo)
 
+        if not queryset.exists():  # Si no hay préstamos, lanza NotFound
+            raise NotFound('No se encontraron préstamos.')
+
         return queryset
 
-class PrestamoDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Prestamo.objects.all()
-    serializer_class = PrestamoSerializer
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({'success': True, 'detail': 'Listado de préstamos.', 'data': serializer.data}, status=status.HTTP_200_OK)

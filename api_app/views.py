@@ -25,7 +25,6 @@ class EditorialDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Editorial.objects.all()
     serializer_class = EditorialSerializer
 
-# Vistas para Libro
 class LibroList(generics.ListCreateAPIView):
     serializer_class = LibroSerializer
 
@@ -39,7 +38,16 @@ class LibroList(generics.ListCreateAPIView):
         if editorial_id:
             queryset = queryset.filter(editorial_id=editorial_id)
         
+        if not queryset.exists():  # Si no hay libros, lanza NotFound
+            raise NotFound('No se encontraron libros.')
+
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({'success': True, 'detail': 'Listado de libros.', 'data': serializer.data}, status=status.HTTP_200_OK)
+
 
 class LibroDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Libro.objects.all()
